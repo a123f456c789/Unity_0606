@@ -15,6 +15,9 @@ public class player : MonoBehaviour
     public AudioClip JMusic;
     public AudioClip SMusic;
     public Animator  ani;
+    public CapsuleCollider2D Cc2d;
+    public Rigidbody2D Rig;
+    public bool IsGround;
     #endregion
 
     # region 方法
@@ -24,7 +27,16 @@ public class player : MonoBehaviour
     private void Jump()
     {
         bool key = Input.GetKey(KeyCode.UpArrow);
-        ani.SetBool("跳躍", key);
+        ani.SetBool("跳躍",!IsGround);
+        if (IsGround)
+        {
+            if (key)
+            {
+                IsGround = false;
+                Rig.AddRelativeForce(new Vector2(0, hight));
+            }
+        }
+       
     }
     /// <summary>
     /// 
@@ -53,8 +65,27 @@ public class player : MonoBehaviour
     /// </summary>
     private void Slide()
     {
-        bool Key= Input.GetKey(KeyCode.DownArrow);
+        bool Key = Input.GetKey(KeyCode.DownArrow);
         ani.SetBool("滑行", Key);
+        if (Key)
+        {
+            Cc2d.offset = new Vector2(0.1519775f, -1.5f);
+            Cc2d.size = new Vector2(4.096518f, 3.0f);
+        }
+        else
+        {
+            Cc2d.offset = new Vector2(0.1519775f, -0.4559404f);
+            Cc2d.size = new Vector2(4.096518f, 6.023365f);
+        }
+        
+    }
+    private void Move()
+    {
+        if (Rig.velocity.magnitude < 6) 
+        {
+            Rig.AddForce(new Vector2(speed, 0));
+        }
+       
     }
 
     #endregion
@@ -66,11 +97,22 @@ public class player : MonoBehaviour
        
 
     }
+    //60fps/秒
     private void Update()
     {
-        Jump();
+       
         Slide();
+       
     }
+    //50fps/秒
+    private void FixedUpdate()
+    {
+        Jump();
+        Move();
+    }
+    /// <summary>
+    /// 
+
     public void Test()
     {
         print("測試方法");
@@ -85,9 +127,17 @@ public class player : MonoBehaviour
     {
         print("施放水流");
         print("播放音效");
+    }  
+    /// </summary>
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.name == "地板")
+        {
+            IsGround = true;
+        }
     }
- 
-    }
+
+}
         #endregion
 
         //
