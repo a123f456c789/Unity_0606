@@ -14,6 +14,7 @@ public class player : MonoBehaviour
     public AudioClip CMusic;
     public AudioClip JMusic;
     public AudioClip SMusic;
+    public Animator  ani;
     #endregion
 
     # region 方法
@@ -22,7 +23,8 @@ public class player : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        print("跳躍");
+        bool key = Input.GetKey(KeyCode.UpArrow);
+        ani.SetBool("跳躍", key);
     }
     /// <summary>
     /// 
@@ -51,19 +53,42 @@ public class player : MonoBehaviour
     /// </summary>
     private void Slide()
     {
-
+        bool Key= Input.GetKey(KeyCode.DownArrow);
+        ani.SetBool("滑行", Key);
     }
+
     #endregion
     #region 事件
     private void Start()
     {
-        Hit();   
+        Hit();
+        Test();
+       
+
     }
     private void Update()
     {
         Jump();
+        Slide();
     }
-    #endregion
+    public void Test()
+    {
+        print("測試方法");
+    }
+    public void SkillFrie()
+    {
+        print("施放火焰");
+        print("播放音效");
 
-    //
-}
+    }
+    public void SkillWater()
+    {
+        print("施放水流");
+        print("播放音效");
+    }
+ 
+    }
+        #endregion
+
+        //
+    

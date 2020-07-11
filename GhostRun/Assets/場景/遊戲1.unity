@@ -1947,7 +1947,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &778207437
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2609,7 +2609,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1036686644
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10234,6 +10234,7 @@ MonoBehaviour:
   CMusic: {fileID: 8300000, guid: 798b2e1c8eff3244a9807461b35625d7, type: 3}
   JMusic: {fileID: 8300000, guid: d500ea3a01aa9fa419a8529b0beedc71, type: 3}
   SMusic: {fileID: 8300000, guid: 92907de42af2b6048b80244399bd5863, type: 3}
+  ani: {fileID: 1929493512}
 --- !u!1 &1931776752
 GameObject:
   m_ObjectHideFlags: 0
@@ -10457,7 +10458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2019826018
 RectTransform:
   m_ObjectHideFlags: 0
