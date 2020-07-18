@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.AI;
+
+
 
 public class player : MonoBehaviour
 {
-    
+    public Text Coinamount;
+    public Text coinamount;
     /*
     */
     #region 角色
@@ -12,12 +17,18 @@ public class player : MonoBehaviour
     public int coin;
     public bool dead;
     public AudioClip CMusic;
+    public AudioClip HMusic;
     public AudioClip JMusic;
     public AudioClip SMusic;
-    public Animator  ani;
+    public Animator ani;
     public CapsuleCollider2D Cc2d;
     public Rigidbody2D Rig;
     public bool IsGround;
+    public Image Imghp;
+    private float HpMax;
+    public AudioSource Aud;
+    public GameObject Final;
+    public Text TextTitle;
     #endregion
 
     # region 方法
@@ -26,8 +37,8 @@ public class player : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        bool key = Input.GetKey(KeyCode.UpArrow);
-        ani.SetBool("跳躍",!IsGround);
+        bool key = Input.GetKeyDown(KeyCode.UpArrow);
+        ani.SetBool("跳躍", !IsGround);
         if (IsGround)
         {
             if (key)
@@ -36,22 +47,43 @@ public class player : MonoBehaviour
                 Rig.AddRelativeForce(new Vector2(0, hight));
             }
         }
-       
+
     }
     /// <summary>
     /// 
     /// </summary>
     private void Hit()
     {
-        print("碰撞");
+        hp -= 1;
+        Imghp.fillAmount = hp / HpMax;
+        Aud.PlayOneShot(HMusic);
+        if(hp <= 0)Dead();
     }
     /// <summary>
     /// 
     /// </summary>
     private void Dead()
     {
+        if (dead) return;
+        
+        speed = 0;
+        dead = true;
+        
+        ani.SetTrigger("死亡");
+        Final.SetActive(true);
+        coinamount.text = "金 幣 值 : " + coin;
+        TextTitle.text = "早死早超生!!";
 
     }
+    private void Pass()
+    {
+        Final.SetActive(true);
+        coinamount.text = "金 幣 值 : " + coin;
+        TextTitle.text = "你還是得死，哈!";
+        Rig.velocity = Vector3.zero;
+        speed = 0;
+    }
+       
     /// <summary>
 
     /// 
@@ -67,6 +99,10 @@ public class player : MonoBehaviour
     {
         bool Key = Input.GetKey(KeyCode.DownArrow);
         ani.SetBool("滑行", Key);
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Aud.PlayOneShot(SMusic);
+        }
         if (Key)
         {
             Cc2d.offset = new Vector2(0.1519775f, -1.5f);
@@ -81,32 +117,42 @@ public class player : MonoBehaviour
     }
     private void Move()
     {
-        if (Rig.velocity.magnitude < 6) 
+        if (Rig.velocity.magnitude < 6)
         {
             Rig.AddForce(new Vector2(speed, 0));
         }
-       
+
     }
+    private void EatCoin(Collider2D collision)
+    {
+        coin++;
+        Destroy(collision.gameObject);
+        Coinamount.text = "金幣:" + coin;
+        Aud.PlayOneShot(CMusic);
+    }
+
 
     #endregion
     #region 事件
     private void Start()
     {
-        Hit();
-        Test();
-       
+
+        HpMax = hp;
+
 
     }
     //60fps/秒
     private void Update()
     {
-       
+        if (dead) return;
         Slide();
-       
+        if (transform.position.y <= -6) Dead();
+
     }
     //50fps/秒
     private void FixedUpdate()
     {
+        if (dead) return;
         Jump();
         Move();
     }
@@ -127,7 +173,7 @@ public class player : MonoBehaviour
     {
         print("施放水流");
         print("播放音效");
-    }  
+    }
     /// </summary>
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -135,9 +181,25 @@ public class player : MonoBehaviour
         {
             IsGround = true;
         }
+        if (collision.gameObject.name == "懸空")
+        { IsGround = true; }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag=="金幣")
+        {
+
+            EatCoin(collision);
+        }
+        if (collision.tag=="障礙物")
+        {
+            Hit();
+        }
+        if (collision.name == "傳送門")
+        Pass();
     }
 
-}
+    }
         #endregion
 
         //
